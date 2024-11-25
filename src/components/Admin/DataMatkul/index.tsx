@@ -112,134 +112,166 @@ const DataMatkul = (): JSX.Element => {
   };
 
   return (
-    <div className="mx-auto max-w-270">
+    <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
       <Breadcrumb pageName="Data Mata Kuliah" />
+      
       <div className="mt-4">
-        <div className="flex gap-4 mb-4">
+        <div className="mb-4">
           <Link href="/admin/matakuliah/create" legacyBehavior>
-            <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-              Tambah
+            <a className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition-colors">
+              Tambah 
             </a>
           </Link>
         </div>
-        <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-          {error && <p className="text-red-500">{error}</p>}
-          {isFetching ? (
-            <p>Loading data...</p>
-          ) : (
-            <div className="flex flex-col">
-              <div className="grid grid-cols-7 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-7">
-                <div className="p-2.5 xl:p-5">
-                  <h5 className="text-sm font-medium uppercase xsm:text-base">Nama</h5>
-                </div>
-                <div className="p-2.5 xl:p-5">
-                  <h5 className="text-sm font-medium uppercase xsm:text-base">Kode</h5>
-                </div>
-                <div className="p-2.5 text-center xl:p-5">
-                  <h5 className="text-sm font-medium uppercase xsm:text-base">SKS</h5>
-                </div>
-                <div className="p-2.5 text-center xl:p-5">
-                  <h5 className="text-sm font-medium uppercase xsm:text-base">Semester</h5>
-                </div>
-                <div className="p-2.5 text-center xl:p-5">
-                  <h5 className="text-sm font-medium uppercase xsm:text-base">Status</h5>
-                </div>
-                <div className="p-2.5 text-center xl:p-5">
-                  <h5 className="text-sm font-medium uppercase xsm:text-base">Actions</h5>
-                </div>
-              </div>
+
+        <div className="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          {error && (
+            <div className="p-4 bg-red-50 text-red-500 border-b border-stroke">
+              {error}
+            </div>
+          )}
+
+          <div className="w-full overflow-x-auto">
+            {/* Mobile View */}
+            <div className="block md:hidden">
               {mataKuliahList.length > 0 ? (
                 mataKuliahList.map((matkul, index) => (
-                  <div
-                    className={`grid grid-cols-7 sm:grid-cols-7 ${
-                      index === mataKuliahList.length - 1 ? "" : "border-b border-stroke dark:border-strokedark"
-                    }`}
+                  <div 
                     key={matkul.id}
+                    className="p-4 border-b border-stroke dark:border-strokedark"
                   >
-                    <div className="flex items-center gap-3 p-2.5 xl:p-5">
-                      {editMatkulId === matkul.id ? (
-                        <input
-                          type="text"
-                          className="border rounded px-2 py-1"
-                          value={editMatkulName}
-                          onChange={(e) => setEditMatkulName(e.target.value)}
-                        />
-                      ) : (
-                        <p className="text-black dark:text-white">{matkul.nama}</p>
-                      )}
-                    </div>
-                    <div className="flex items-center p-2.5 xl:p-5">
-                      {editMatkulId === matkul.id ? (
-                        <input
-                          type="text"
-                          className="border rounded px-2 py-1"
-                          value={editMatkulKode}
-                          onChange={(e) => setEditMatkulKode(e.target.value)}
-                        />
-                      ) : (
-                        <p className="text-black dark:text-white">{matkul.kode}</p>
-                      )}
-                    </div>
-                    <div className="flex items-center justify-center p-2.5 xl:p-5">
-                      <p className="text-meta-3">{matkul.sks || "-"}</p>
-                    </div>
-                    <div className="flex items-center justify-center p-2.5 xl:p-5">
-                      <p className="text-meta-3">{matkul.semester || "-"}</p>
-                    </div>
-                    <div className="flex items-center justify-center p-2.5 xl:p-5">
-                      <p className="text-meta-3">{matkul.status || "-"}</p>
-                    </div>
-                    <div className="flex items-center justify-center p-2.5 xl:p-5">
-                      {editMatkulId === matkul.id ? (
-                        <>
-                          <button
-                            className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded"
-                            onClick={() => handleEditMatkul(matkul.id)}
-                          >
-                            Save
-                          </button>
-                          <button
-                            className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded ml-2"
-                            onClick={handleCancelEdit}
-                          >
-                            Cancel
-                          </button>
-                        </>
-                      ) : (
-                        <>
-                       <div className="flex space-x-2">
-                        {/* Kelas Button */}
-                        <Link href={`/admin/matakuliah/${matkul.id}/kelas/`} legacyBehavior>
-                          <a className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-1 rounded">
-                            Kelas
-                          </a>
-                        </Link>
-
-                        {/* Delete Button */}
-                        <button
-                          className="bg-red hover:bg-red text-white px-4 py-1 rounded"
-                          onClick={() => handleDeleteMatkul(matkul.id)}
-                        >
-                          Delete
-                        </button>
-
-                        {/* Edit Button */}
+                    <div className="flex flex-col space-y-3">
+                      <div>
+                        <h3 className="font-medium text-black dark:text-white">{matkul.nama}</h3>
+                        <p className="text-sm text-gray-600 mt-1">{matkul.kode}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="font-medium">SKS:</span> {matkul.sks || "-"}
+                        </div>
+                        <div>
+                          <span className="font-medium ">Semester:</span> {matkul.semester || "-"}
+                        </div>
+                        <div>
+                          <span className="font-medium">Status:</span> {matkul.status || "-"}
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
                         <Link href={`/admin/matakuliah/edit/${matkul.id}`} legacyBehavior>
-                          <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-1 rounded">
+                          <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
                             Edit
                           </a>
                         </Link>
+                        <button
+                          className="bg-red hover:bg-red text-white px-3 py-1 rounded text-sm"
+                          onClick={() => handleDeleteMatkul(matkul.id)}
+                        >
+                          Hapus
+                        </button>
+                        <Link href={`/admin/matakuliah/${matkul.id}/kelas/`} legacyBehavior>
+                          <a className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                            Kelas
+                          </a>
+                        </Link>
                       </div>
-                        </>
-                      )}
                     </div>
                   </div>
                 ))
+              ) : isFetching ? (
+                <div className="p-4 text-center">Loading...</div>
               ) : (
-                <p className="text-center">No Mata Kuliah found</p>
+                <div className="p-4 text-center">No data available</div>
               )}
             </div>
-          )}
+
+            {/* Desktop View */}
+            <table className="hidden md:table min-w-full">
+              <thead>
+                <tr className="bg-gray-2 dark:bg-meta-4">
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Nama
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Kode
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    SKS
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Semester
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Status
+                  </th>
+                  <th className="py-4 px-4 text-center text-sm font-semibold">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {mataKuliahList.length > 0 ? (
+                  mataKuliahList.map((matkul, index) => (
+                    <tr 
+                      key={matkul.id}
+                      className={`border-b border-stroke dark:border-strokedark ${
+                        index % 2 === 0 ? 'bg-gray-50' : 'bg-gray-50'
+                      }`}
+                    >
+                      <td className="py-4 px-4">
+                          <span className="text-black dark:text-white">{matkul.nama}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                          <span className="text-black dark:text-white">{matkul.kode}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{matkul.sks || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{matkul.semester || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{matkul.status || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center justify-center gap-2 flex-wrap">
+                            <>
+                              <Link href={`/admin/matakuliah/edit/${matkul.id}`} legacyBehavior>
+                                <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                                  Edit
+                                </a>
+                              </Link>
+                              <button
+                                className="bg-red hover:bg-red text-white px-3 py-1 rounded"
+                                onClick={() => handleDeleteMatkul(matkul.id)}
+                              >
+                                Hapus
+                              </button>
+                              <Link href={`/admin/matakuliah/${matkul.id}/kelas/`} legacyBehavior>
+                                <a className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+                                  Kelas
+                                </a>
+                              </Link>
+                            </>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : isFetching ? (
+                  <tr>
+                    <td colSpan={6} className="py-4 text-center">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-4 text-center">
+                      No data available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>

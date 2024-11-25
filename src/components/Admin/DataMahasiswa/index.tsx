@@ -88,130 +88,212 @@ const DataMahasiswa = (): JSX.Element => {
   const handleCancelEdit = () => {
     setEditFormData({ id: null, name: "", email: "" });
   };
+
   return (
-    <div className="mx-auto max-w-270">
+    <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
       <Breadcrumb pageName="Data Mahasiswa" />
+      
       <div className="mt-4">
-        <div className="flex gap-4 mb-4">
+        <div className="mb-4">
           <Link href="/admin/datamahasiswa/create" legacyBehavior>
-            <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-              Tambah
+            <a className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition-colors">
+              Tambah Mahasiswa
             </a>
           </Link>
         </div>
-        <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-          {error && <p className="text-red-500">{error}</p>}
-          <div className="flex flex-col">
-            <div className="grid grid-cols-6 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-6">
-              <div className="p-2.5 xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Nama</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Email</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">NIM</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Semester</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Mobile Phone</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Actions</h5>
-              </div>
+
+        <div className="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          {error && (
+            <div className="p-4 bg-red-50 text-red-500 border-b border-stroke">
+              {error}
             </div>
-            {mahasiswas.length > 0 ? (
-              mahasiswas.map((mahasiswa) => (
-                <div
-                  className={`grid grid-cols-6 sm:grid-cols-6 border-b border-stroke dark:border-strokedark`}
-                  key={mahasiswa.id}
-                >
-                  <div className="flex items-center gap-3 p-2.5 xl:p-5">
-                    {editFormData.id === mahasiswa.id ? (
-                      <input
-                        type="text"
-                        className="border rounded px-2 py-1"
-                        value={editFormData.name}
-                        onChange={(e) => handleEditChange("name", e.target.value)}
-                      />
-                    ) : (
-                      <p className="text-black dark:text-white">{mahasiswa.nama}</p>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5">
-                    {editFormData.id === mahasiswa.id ? (
-                      <input
-                        type="text"
-                        className="border rounded px-2 py-1"
-                        value={editFormData.email}
-                        onChange={(e) => handleEditChange("email", e.target.value)}
-                      />
-                    ) : (
-                      <p className="text-black dark:text-white">{mahasiswa.email}</p>
-                    )}
-                  </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5">
-                    <p className="text-meta-3">{mahasiswa.nim || "-"}</p>
-                  </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5">
-                    <p className="text-meta-3">{mahasiswa.semester || "-"}</p>
-                  </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5">
-                    <p className="text-meta-3">{mahasiswa.mobile_phone || "-"}</p>
-                  </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5 space-y-2 flex-wrap">
-                    {editFormData.id === mahasiswa.id ? (
-                      <>
-                        <button
-                          className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
-                          onClick={handleEditMahasiswa}
-                        >
-                          Save
-                        </button>
-                        <button
-                          className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded"
-                          onClick={handleCancelEdit}
-                        >
-                          Cancel
-                        </button>
-                      </>
-                    ) : (
-                      <div className="flex flex-wrap justify-center gap-2">
-                        <div className="flex flex-col space-y-2">
-                          <Link href={`/admin/datamahasiswa/edit/${mahasiswa.id}`} legacyBehavior>
-                            <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-                              Edit
-                            </a>
-                          </Link>
-                          <Link href={`/admin/datamahasiswa/detail/${mahasiswa.id}`} legacyBehavior>
-                            <a className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
-                              Detail
-                            </a>
-                          </Link>
+          )}
+
+          <div className="w-full overflow-x-auto">
+            {/* Mobile View */}
+            <div className="block md:hidden">
+              {mahasiswas.length > 0 ? (
+                mahasiswas.map((mahasiswa, index) => (
+                  <div 
+                    key={mahasiswa.id}
+                    className="p-4 border-b border-stroke dark:border-strokedark"
+                  >
+                    <div className="flex flex-col space-y-3">
+                      <div>
+                        <h3 className="font-medium text-black dark:text-white">{mahasiswa.nama}</h3>
+                        <p className="text-sm text-gray-600 mt-1">{mahasiswa.email}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="font-medium">NIM:</span> {mahasiswa.nim || "-"}
                         </div>
-                        <button
-                            className="bg-red hover:bg-red text-white px-3 py-1 rounded"
-                            onClick={() => handleDeleteMahasiswa(mahasiswa.id)}
-                          >
-                            Hapus
-                          </button>
-                        <div className="flex flex-col space-y-2">
-                          <Link href={`/admin/datamahasiswa/matakuliah/${mahasiswa.id}/`} legacyBehavior>
-                            <a className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
-                              Mata Kuliah
-                            </a>
-                          </Link>
+                        <div>
+                          <span className="font-medium ">Semester:</span> {mahasiswa.semester || "-"}
+                        </div>
+                        <div>
+                          <span className="font-medium">Phone:</span> {mahasiswa.mobile_phone || "-"}
                         </div>
                       </div>
-                    )}
+                      <div className="flex flex-wrap gap-2">
+                        <Link href={`/admin/datamahasiswa/edit/${mahasiswa.id}`} legacyBehavior>
+                          <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
+                            Edit
+                          </a>
+                        </Link>
+                        <Link href={`/admin/datamahasiswa/detail/${mahasiswa.id}`} legacyBehavior>
+                          <a className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                            Detail
+                          </a>
+                        </Link>
+                        <button
+                          className="bg-red hover:bg-red text-white px-3 py-1 rounded text-sm"
+                          onClick={() => handleDeleteMahasiswa(mahasiswa.id)}
+                        >
+                          Hapus
+                        </button>
+                        <Link href={`/admin/datamahasiswa/matakuliah/${mahasiswa.id}/`} legacyBehavior>
+                          <a className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded text-sm">
+                            Mata Kuliah
+                          </a>
+                        </Link>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              ))
-            ) : (
-              <p className="text-center p-5">No Mahasiswa data available.</p>
-            )}
+                ))
+              ) : isFetching ? (
+                <div className="p-4 text-center">Loading...</div>
+              ) : (
+                <div className="p-4 text-center">No data available</div>
+              )}
+            </div>
+
+            {/* Desktop View */}
+            <table className="hidden md:table min-w-full">
+              <thead>
+                <tr className="bg-gray-2 dark:bg-meta-4">
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Nama
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Email
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    NIM
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Semester
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Mobile Phone
+                  </th>
+                  <th className="py-4 px-4 text-center text-sm font-semibold">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {mahasiswas.length > 0 ? (
+                  mahasiswas.map((mahasiswa, index) => (
+                    <tr 
+                      key={mahasiswa.id}
+                      className={`border-b border-stroke dark:border-strokedark ${
+                        index % 2 === 0 ? 'bg-gray-50' : 'bg-gray-50'
+                      }`}
+                    >
+                      <td className="py-4 px-4">
+                        {editFormData.id === mahasiswa.id ? (
+                          <input
+                            type="text"
+                            className="border rounded px-2 py-1 w-full"
+                            value={editFormData.name}
+                            onChange={(e) => handleEditChange("name", e.target.value)}
+                          />
+                        ) : (
+                          <span className="text-black dark:text-white">{mahasiswa.nama}</span>
+                        )}
+                      </td>
+                      <td className="py-4 px-4">
+                        {editFormData.id === mahasiswa.id ? (
+                          <input
+                            type="text"
+                            className="border rounded px-2 py-1 w-full"
+                            value={editFormData.email}
+                            onChange={(e) => handleEditChange("email", e.target.value)}
+                          />
+                        ) : (
+                          <span className="text-black dark:text-white">{mahasiswa.email}</span>
+                        )}
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{mahasiswa.nim || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{mahasiswa.semester || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{mahasiswa.mobile_phone || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center justify-center gap-2 flex-wrap">
+                          {editFormData.id === mahasiswa.id ? (
+                            <>
+                              <button
+                                className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded"
+                                onClick={handleEditMahasiswa}
+                              >
+                                Save
+                              </button>
+                              <button
+                                className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded"
+                                onClick={handleCancelEdit}
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          ) : (
+                            <>
+                              <Link href={`/admin/datamahasiswa/edit/${mahasiswa.id}`} legacyBehavior>
+                                <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                                  Edit
+                                </a>
+                              </Link>
+                              <Link href={`/admin/datamahasiswa/detail/${mahasiswa.id}`} legacyBehavior>
+                                <a className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                                  Detail
+                                </a>
+                              </Link>
+                              <button
+                                className="bg-red hover:bg-red text-white px-3 py-1 rounded"
+                                onClick={() => handleDeleteMahasiswa(mahasiswa.id)}
+                              >
+                                Hapus
+                              </button>
+                              <Link href={`/admin/datamahasiswa/matakuliah/${mahasiswa.id}/`} legacyBehavior>
+                                <a className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded">
+                                  Mata Kuliah
+                                </a>
+                              </Link>
+                            </>
+                          )}
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : isFetching ? (
+                  <tr>
+                    <td colSpan={6} className="py-4 text-center">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-4 text-center">
+                      No data available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
