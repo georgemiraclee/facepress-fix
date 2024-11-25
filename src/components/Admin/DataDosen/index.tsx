@@ -9,8 +9,6 @@ import { Dosen } from "@/types/Dosen";
 import withAuth from "@/hoc/withAuth";
 import axiosInstance from "@/utils/axiosinstance";
 
-// Define the Dosen interface based on the API response
-
 const DataDosen = (): JSX.Element => {
   const router = useRouter();
   const [dosens, setDosens] = useState<Dosen[]>([]);
@@ -30,7 +28,7 @@ const DataDosen = (): JSX.Element => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setDosens(response.data.data); // Updated to match API response
+      setDosens(response.data.data);
       setIsFetching(false);
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -50,20 +48,19 @@ const DataDosen = (): JSX.Element => {
       });
   
       if (response.data.success === false) {
-        setError(response.data.message); // Set error to be displayed on the frontend
+        setError(response.data.message);
         Swal.fire("Error", response.data.message, "error");
       } else {
-        fetchData(); // Refresh the data
+        fetchData();
         Swal.fire("Success", response.data.message, "success");
       }
     } catch (error) {
       if (axios.isAxiosError(error)) {
         console.log("Axios error response:", error.response);
         
-        // Handle the 400 Bad Request error
         if (error.response && error.response.status === 400) {
           const errorMessage = error.response.data?.message || "Bad Request";
-          setError(errorMessage); // Set error to be displayed on the frontend
+          setError(errorMessage);
           Swal.fire("Error", errorMessage, "error");
         } else {
           setError("Failed to delete Dosen");
@@ -76,86 +73,158 @@ const DataDosen = (): JSX.Element => {
       }
     }
   };
-  
-  
-  
 
   return (
-    <div className="mx-auto max-w-270">
+    <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
       <Breadcrumb pageName="Data Dosen" />
+      
       <div className="mt-4">
-        <div className="flex gap-4 mb-4">
+        <div className="mb-4">
           <Link href="/admin/datadosen/create" legacyBehavior>
-            <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-              Tambah
+            <a className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition-colors">
+              Tambah Dosen
             </a>
           </Link>
         </div>
-        <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-          {error && <p className="text-red-500">{error}</p>}
-          <div className="flex flex-col">
-            <div className="grid grid-cols-5 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-5">
-              <div className="p-2.5 xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Nama</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Email</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">NIP</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Mobile Phone</h5>
-              </div>
-              <div className="p-2.5 text-center xl:p-5">
-                <h5 className="text-sm font-medium uppercase xsm:text-base">Actions</h5>
-              </div>
+
+        <div className="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          {error && (
+            <div className="p-4 bg-red-50 text-red-500 border-b border-stroke">
+              {error}
             </div>
-            {dosens.length > 0 ? (
-              dosens.map((dosen, index) => (
-                <div
-                  className={`grid grid-cols-5 sm:grid-cols-5 ${
-                    index === dosens.length - 1 ? "" : "border-b border-stroke dark:border-strokedark"
-                  }`}
-                  key={dosen.id} // Use `id` as key
-                >
-                  <div className="flex items-center gap-3 p-2.5 xl:p-5">
-                    <p className="text-black dark:text-white">{dosen.nama}</p>
+          )}
+
+          <div className="w-full overflow-x-auto">
+            {/* Mobile View */}
+            <div className="block md:hidden">
+              {dosens.length > 0 ? (
+                dosens.map((dosen, index) => (
+                  <div 
+                    key={dosen.id}
+                    className="p-4 border-b border-stroke dark:border-strokedark"
+                  >
+                    <div className="flex flex-col space-y-3">
+                      <div className="flex justify-between items-start">
+                        <div>
+                          <p className="font-medium text-black dark:text-white">{dosen.nama}</p>
+                          <p className="text-sm text-gray-600 mt-1">{dosen.email}</p>
+                        </div>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="font-medium">NIP:</span> {dosen.nip || "-"}
+                        </div>
+                        <div>
+                          <span className="font-medium">Phone:</span> {dosen.mobile_phone || "-"}
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Link href={`/admin/datadosen/edit/${dosen.id}`} legacyBehavior>
+                          <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded text-sm">
+                            Edit
+                          </a>
+                        </Link>
+                        <Link href={`/admin/datadosen/detail/${dosen.id}`} legacyBehavior>
+                          <a className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded text-sm">
+                            Detail
+                          </a>
+                        </Link>
+                        <button
+                          className="bg-red hover:bg-red text-white px-3 py-1 rounded text-sm"
+                          onClick={() => handleDeleteDosen(dosen.id)}
+                        >
+                          Delete
+                        </button>
+                      </div>
+                    </div>
                   </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5">
-                    <p className="text-black dark:text-white">{dosen.email}</p>
-                  </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5">
-                    <p className="text-meta-3">{dosen.nip || "-"}</p>
-                  </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5">
-                    <p className="text-meta-3">{dosen.mobile_phone || "-"}</p>
-                  </div>
-                  <div className="flex items-center justify-center p-2.5 xl:p-5 space-x-2">
-                    <Link href={`/admin/datadosen/edit/${dosen.id}`} legacyBehavior>
-                      <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
-                        Edit
-                      </a>
-                    </Link>
-                    <Link href={`/admin/datadosen/detail/${dosen.id}`} legacyBehavior>
-                      <a className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
-                        Detail
-                      </a>
-                    </Link>
-                    <button
-                      className="bg-red hover:bg-red text-white px-3 py-1 rounded"
-                      onClick={() => handleDeleteDosen(dosen.id)} // Pass the ID instead of email
+                ))
+              ) : isFetching ? (
+                <div className="p-4 text-center">Loading...</div>
+              ) : (
+                <div className="p-4 text-center">No data available</div>
+              )}
+            </div>
+
+            {/* Desktop View */}
+            <table className="hidden md:table min-w-full">
+              <thead>
+                <tr className="bg-gray-2 dark:bg-meta-4">
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Nama
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Email
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    NIP
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Mobile Phone
+                  </th>
+                  <th className="py-4 px-4 text-center text-sm font-semibold">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {dosens.length > 0 ? (
+                  dosens.map((dosen, index) => (
+                    <tr 
+                      key={dosen.id}
+                      className={`border-b border-stroke dark:border-strokedark ${
+                        index % 2 === 0 ? 'bg-gray-50' : 'bg-gray-50'
+                      }`}
                     >
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))
-            ) : isFetching ? (
-              <p>Loading...</p>
-            ) : (
-              <p>No data available</p>
-            )}
+                      <td className="py-4 px-4">
+                        <span className="text-black dark:text-white">{dosen.nama}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span className="text-black dark:text-white">{dosen.email}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{dosen.nip || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{dosen.mobile_phone || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center justify-center space-x-2">
+                          <Link href={`/admin/datadosen/edit/${dosen.id}`} legacyBehavior>
+                            <a className="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded">
+                              Edit
+                            </a>
+                          </Link>
+                          <Link href={`/admin/datadosen/detail/${dosen.id}`} legacyBehavior>
+                            <a className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded">
+                              Detail
+                            </a>
+                          </Link>
+                          <button
+                            className="bg-red hover:bg-red text-white px-3 py-1 rounded"
+                            onClick={() => handleDeleteDosen(dosen.id)}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : isFetching ? (
+                  <tr>
+                    <td colSpan={5} className="py-4 text-center">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                  <tr>
+                    <td colSpan={5} className="py-4 text-center">
+                      No data available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>
