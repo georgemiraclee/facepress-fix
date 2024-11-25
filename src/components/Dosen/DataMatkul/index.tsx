@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import withAuth from "@/hoc/withAuth"; // Import the withAuth HOC
 import { MataKuliah } from "@/types/MataKuliah";
 import Link from "next/link";
+import Breadcrumb from "../Breadcrumbs/Breadcrumb";
 
 const MataKuliahDiampu = (): JSX.Element => {
   const router = useRouter();
@@ -39,73 +40,150 @@ const MataKuliahDiampu = (): JSX.Element => {
   };
 
   return (
-    <div className="mt-4">
-      <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-        <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
-          Mata Kuliah yang Diampu
-        </h4>
-        {error && <p className="text-red-500">{error}</p>}
-        <div className="flex flex-col">
-          <div className="grid grid-cols-7 rounded-sm bg-gray-2 dark:bg-meta-4 sm:grid-cols-7">
-            <div className="p-2.5 xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">Nama</h5>
+    <div className="mx-auto max-w-full px-4 sm:px-6 lg:px-8">
+      <Breadcrumb pageName="Data Mata Kuliah" />
+      
+      <div className="mt-4">
+        <div className="mb-4">
+          <Link href="/admin/matakuliah/create" legacyBehavior>
+            <a className="inline-block bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded transition-colors">
+              Tambah 
+            </a>
+          </Link>
+        </div>
+
+        <div className="rounded-lg border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
+          {error && (
+            <div className="p-4 bg-red-50 text-red-500 border-b border-stroke">
+              {error}
             </div>
-            <div className="p-2.5 xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">Kode</h5>
-            </div>
-            <div className="p-2.5 text-center xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">SKS</h5>
-            </div>
-            <div className="p-2.5 text-center xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">Semester</h5>
-            </div>
-            <div className="p-2.5 text-center xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">Status</h5>
-            </div>
-            <div className="p-2.5 text-center xl:p-5">
-              <h5 className="text-sm font-medium uppercase xsm:text-base">Actions</h5>
-            </div>
-          </div>
-          {mataKuliahList.length > 0 ? (
-            mataKuliahList.map((matkul, index) => (
-              <div
-                className={`grid grid-cols-7 sm:grid-cols-7 ${
-                  index === mataKuliahList.length - 1 ? "" : "border-b border-stroke dark:border-strokedark"
-                }`}
-                key={matkul.id}
-              >
-                <div className="flex items-center gap-3 p-2.5 xl:p-5">
-                  <p className="text-black dark:text-white">{matkul.nama}</p>
-                </div>
-                <div className="flex items-center p-2.5 xl:p-5">
-                  <p className="text-black dark:text-white">{matkul.kode}</p>
-                </div>
-                <div className="flex items-center justify-center p-2.5 xl:p-5">
-                  <p className="text-meta-3">{matkul.sks || "-"}</p>
-                </div>
-                <div className="flex items-center justify-center p-2.5 xl:p-5">
-                  <p className="text-meta-3">{matkul.semester || "-"}</p>
-                </div>
-                <div className="flex items-center justify-center p-2.5 xl:p-5">
-                  <p className="text-meta-3">{matkul.status || "-"}</p>
-                </div>
-                <div className="flex items-center justify-center p-2.5 xl:p-5 space-x-2">
-                  <button
+          )}
+
+          <div className="w-full overflow-x-auto">
+            {/* Mobile View */}
+            <div className="block md:hidden">
+              {mataKuliahList.length > 0 ? (
+                mataKuliahList.map((matkul, index) => (
+                  <div 
+                    key={matkul.id}
+                    className="p-4 border-b border-stroke dark:border-strokedark"
+                  >
+                    <div className="flex flex-col space-y-3">
+                      <div>
+                        <h3 className="font-medium text-black dark:text-white">{matkul.nama}</h3>
+                        <p className="text-sm text-gray-600 mt-1">{matkul.kode}</p>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-sm">
+                        <div>
+                          <span className="font-medium">SKS:</span> {matkul.sks || "-"}
+                        </div>
+                        <div>
+                          <span className="font-medium ">Semester:</span> {matkul.semester || "-"}
+                        </div>
+                        <div>
+                          <span className="font-medium">Status:</span> {matkul.status || "-"}
+                        </div>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                      <button
                     className="bg-blue-900 hover:bg-blue-1000 text-white px-3 py-1 rounded"
                     onClick={() => handleViewClasses(matkul.id)}
                   >
                     Lihat
                   </button>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>No Mata Kuliah found</p>
-          )}
+                      </div>
+                    </div>
+                  </div>
+                ))
+              ) : isFetching ? (
+                <div className="p-4 text-center">Loading...</div>
+              ) : (
+                <div className="p-4 text-center">No data available</div>
+              )}
+            </div>
+
+            {/* Desktop View */}
+            <table className="hidden md:table min-w-full">
+              <thead>
+                <tr className="bg-gray-2 dark:bg-meta-4">
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Nama
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Kode
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    SKS
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Semester
+                  </th>
+                  <th className="py-4 px-4 text-left text-sm font-semibold">
+                    Status
+                  </th>
+                  <th className="py-4 px-4 text-center text-sm font-semibold">
+                    Actions
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {mataKuliahList.length > 0 ? (
+                  mataKuliahList.map((matkul, index) => (
+                    <tr 
+                      key={matkul.id}
+                      className={`border-b border-stroke dark:border-strokedark ${
+                        index % 2 === 0 ? 'bg-gray-50' : 'bg-gray-50'
+                      }`}
+                    >
+                      <td className="py-4 px-4">
+                          <span className="text-black dark:text-white">{matkul.nama}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                          <span className="text-black dark:text-white">{matkul.kode}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{matkul.sks || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{matkul.semester || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <span>{matkul.status || "-"}</span>
+                      </td>
+                      <td className="py-4 px-4">
+                        <div className="flex items-center justify-center gap-2 flex-wrap">
+                            <>
+                            <button
+                              className="bg-blue-900 hover:bg-blue-1000 text-white px-3 py-1 rounded"
+                              onClick={() => handleViewClasses(matkul.id)}
+                            >
+                              Lihat
+                            </button>
+                            </>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : isFetching ? (
+                  <tr>
+                    <td colSpan={6} className="py-4 text-center">
+                      Loading...
+                    </td>
+                  </tr>
+                ) : (
+                  <tr>
+                    <td colSpan={6} className="py-4 text-center">
+                      No data available
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   );
 };
 
-export default withAuth(MataKuliahDiampu); // Wrap the component with withAuth HOC
+export default withAuth(MataKuliahDiampu);
