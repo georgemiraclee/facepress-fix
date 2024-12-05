@@ -112,7 +112,7 @@ const DetailMataKuliah = () => {
   return (
     <div className="mx-auto max-w-4xl">
       <Breadcrumb pageName="Detail Mata Kuliah" />
-      <div className="rounded-sm border bg-white px-5 pb-2.5 pt-6 shadow-default">
+      <div className="rounded-sm border bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark">
         <h2 className="text-2xl font-bold mb-4">Detail Mata Kuliah</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -143,50 +143,100 @@ const DetailMataKuliah = () => {
               Create Kelas
             </a>
           </Link>
-          <div className="mt-4">
-            <h3 className="text-xl font-bold mb-4">Kelas</h3>
-            <table className="min-w-full bg-white shadow-default">
-              <thead>
-                <tr>
-                  <th className="py-2">Nama Kelas</th>
-                  <th className="py-2">Kode Kelas</th>
-                  <th className="py-2">Ruang</th>
-                  <th className="py-2">Hari</th>
-                  <th className="py-2">Jam Mulai</th>
-                  <th className="py-2">Jam Selesai</th>
-                  <th className="py-2">Kapasitas</th>
-                  <th className="py-2">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {mataKuliah.kelas.map((kelas) => (
-                  <tr key={kelas.id}>
-                    <td className="py-2">{kelas.nama_kelas}</td>
-                    <td className="py-2">{kelas.kode_kelas}</td>
-                    <td className="py-2">{kelas.ruang.nama_ruang}</td>
-                    <td className="py-2">{kelas.hari}</td>
-                    <td className="py-2">{kelas.jam_mulai}</td>
-                    <td className="py-2">{kelas.jam_selesai}</td>
-                    <td className="py-2">{kelas.kapasitas}</td>
-                    <td className="py-2">
-                      <Link href={`/admin/matakuliah/${mataKuliah.id}/kelas/edit/${kelas.id}`} legacyBehavior>
-                        <a className="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
-                      </Link>
-                      <Link href={`/admin/matakuliah/${mataKuliah.id}/kelas/${kelas.id}/jadwal/`} legacyBehavior>
-                        <a className="text-blue-600 hover:text-blue-900 mr-2">Jadwal</a>
-                      </Link>
-                      <button
-                        onClick={() => handleDeleteKelas(kelas.id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        Delete
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+         {/* Replace the existing table section with this responsive version */}
+<div className="mt-4">
+  <h3 className="text-xl font-bold mb-4">Kelas</h3>
+  
+  {/* Mobile View - Grid Cards */}
+  <div className="grid gap-4 md:hidden">
+    {mataKuliah.kelas.map((kelas) => (
+      <div 
+        key={kelas.id} 
+        className="bg-white shadow rounded-lg p-4 dark:bg-boxdark"
+      >
+        <div className="grid grid-cols-2 gap-2">
+          <div className="font-semibold">Nama Kelas:</div>
+          <div>{kelas.nama_kelas}</div>
+          
+          <div className="font-semibold">Kode Kelas:</div>
+          <div>{kelas.kode_kelas}</div>
+          
+          <div className="font-semibold">Ruang:</div>
+          <div>{kelas.ruang.nama_ruang}</div>
+          
+          <div className="font-semibold">Hari:</div>
+          <div>{kelas.hari}</div>
+          
+          <div className="font-semibold">Jam Mulai:</div>
+          <div>{kelas.jam_mulai}</div>
+          
+          <div className="font-semibold">Jam Selesai:</div>
+          <div>{kelas.jam_selesai}</div>
+          
+          <div className="font-semibold">Kapasitas:</div>
+          <div>{kelas.kapasitas}</div>
+        </div>
+        
+        <div className="mt-4 flex flex-wrap gap-2 justify-between">
+          <Link href={`/admin/matakuliah/${mataKuliah.id}/kelas/edit/${kelas.id}`} legacyBehavior>
+            <a className="text-white hover:text-white px-2 py-1 bg-blue-500 rounded">Edit</a>
+          </Link>
+          <Link href={`/admin/matakuliah/${mataKuliah.id}/kelas/${kelas.id}/jadwal/`} legacyBehavior>
+            <a className="text-white hover:text-white-300 px-2 py-1 bg-yellow-500 rounded">Jadwal</a>
+          </Link>
+          <button
+            onClick={() => handleDeleteKelas(kelas.id)}
+            className="text-white hover:text-white px-2 py-1 bg-red rounded"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+      {/* Desktop Table View */}
+      <table className="min-w-full bg-white shadow-default dark:border-strokedark dark:bg-boxdark hidden md:table">
+        <thead>
+          <tr>
+            <th className="py-2">Nama Kelas</th>
+            <th className="py-2">Kode Kelas</th>
+            <th className="py-2">Ruang</th>
+            <th className="py-2">Hari</th>
+            <th className="py-2">Jam Mulai</th>
+            <th className="py-2">Jam Selesai</th>
+            <th className="py-2">Kapasitas</th>
+            <th className="py-2">Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mataKuliah.kelas.map((kelas) => (
+            <tr key={kelas.id}>
+              <td className="py-2">{kelas.nama_kelas}</td>
+              <td className="py-2">{kelas.kode_kelas}</td>
+              <td className="py-2">{kelas.ruang.nama_ruang}</td>
+              <td className="py-2">{kelas.hari}</td>
+              <td className="py-2">{kelas.jam_mulai}</td>
+              <td className="py-2">{kelas.jam_selesai}</td>
+              <td className="py-2">{kelas.kapasitas}</td>
+              <td className="py-2">
+                <Link href={`/admin/matakuliah/${mataKuliah.id}/kelas/edit/${kelas.id}`} legacyBehavior>
+                  <a className="text-yellow-600 hover:text-yellow-900 mr-2">Edit</a>
+                </Link>
+                <Link href={`/admin/matakuliah/${mataKuliah.id}/kelas/${kelas.id}/jadwal/`} legacyBehavior>
+                  <a className="text-blue-600 hover:text-blue-900 mr-2">Jadwal</a>
+                </Link>
+                <button
+                  onClick={() => handleDeleteKelas(kelas.id)}
+                  className="text-red hover:text-red"
+                >
+                  Delete
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
         </div>
         <div className="flex justify-end gap-4.5 mt-4">
           <button

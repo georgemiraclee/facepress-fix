@@ -108,7 +108,7 @@ const DetailKelas = () => {
   return (
     <div className="mx-auto max-w-4xl">
       <Breadcrumb pageName="Detail Kelas" />
-      <div className="rounded-sm border bg-white px-5 pb-2.5 pt-6 shadow-default">
+      <div className="rounded-sm border bg-white px-5 pb-2.5 pt-6  shadow-default dark:border-strokedark dark:bg-boxdark ">
         <h2 className="text-2xl font-bold mb-4">Detail Kelas</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -129,47 +129,87 @@ const DetailKelas = () => {
               Create Jadwal
             </a>
           </Link>
-          <div className="mt-4">
-            <h3 className="text-xl font-bold mb-4">Jadwal</h3>
-            <table className="min-w-full bg-white shadow-default">
-              <thead>
-                <tr>
-                  <th className="py-2">Tanggal</th>
-                  <th className="py-2">Jam Mulai</th>
-                  <th className="py-2">Jam Selesai</th>
-                  <th className="py-2">Dosen</th>
-                  <th className="py-2">Ruang</th>
-                  <th className="py-2">Status</th>
-                  <th className="py-2">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                {kelasDetail.jadwals.map((jadwal) => (
-                  <tr key={jadwal.id}>
-                    <td className="py-2">{jadwal.tanggal}</td>
-                    <td className="py-2">{jadwal.jam_mulai}</td>
-                    <td className="py-2">{jadwal.jam_selesai}</td>
-                    <td className="py-2">{jadwal.dosen}</td>
-                    <td className="py-2">{jadwal.ruang}</td>
-                    <td className="py-2">{jadwal.status}</td>
-                    <td className="py-2">
-                      <Link href={`/admin/matakuliah/${kelasDetail.mata_kuliah.id}/kelas/${kelasDetail.id}/jadwal/edit/${jadwal.id}/`} legacyBehavior>
-                        <a className="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
-                      </Link>
-                      <button
-                        onClick={() => handleDeleteJadwal(jadwal.id)}
-                        className="text-red-600 hover:text-red-900"
-                      >
-                        Delete
-                      </button>
-                      <Link href={`/admin/presensi/${jadwal.id}`} legacyBehavior>
-                        <a className="text-green-600 hover:text-green-900 ml-2">Atur Presensi</a>
-                      </Link>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+        {/* Replace the existing table section with this code */}
+<div className="mt-4 space-y-4 sm:hidden"> {/* Only show on mobile screens */}
+  {kelasDetail.jadwals.map((jadwal) => (
+    <div 
+      key={jadwal.id} 
+      className="bg-white shadow rounded-lg p-4 border border-gray-200  shadow-default dark:border-strokedark dark:bg-boxdark "
+    >
+      <div className="grid grid-cols-2 gap-2">
+        <div className="font-semibold">Tanggal</div>
+        <div>{jadwal.tanggal}</div>
+        
+        <div className="font-semibold">Jam</div>
+        <div>{jadwal.jam_mulai} - {jadwal.jam_selesai}</div>
+        
+        <div className="font-semibold">Dosen</div>
+        <div>{jadwal.dosen}</div>
+        
+        <div className="font-semibold">Ruang</div>
+        <div>{jadwal.ruang}</div>
+        
+        <div className="font-semibold">Status</div>
+        <div>{jadwal.status}</div>
+      </div>
+      
+      <div className="mt-4 flex space-x-2">
+        <Link href={`/admin/matakuliah/${kelasDetail.mata_kuliah.id}/kelas/${kelasDetail.id}/jadwal/edit/${jadwal.id}/`} legacyBehavior>
+          <a className="flex-1 text-center rounded bg-blue-500 text-white py-2">Edit</a>
+        </Link>
+        <button
+          onClick={() => handleDeleteJadwal(jadwal.id)}
+          className="flex-1 rounded bg-red text-white py-2"
+        >
+          Delete
+        </button>
+        <Link href={`/admin/presensi/${jadwal.id}`} legacyBehavior>
+          <a className="flex-1 text-center rounded bg-green-500 text-white py-2">Presensi</a>
+        </Link>
+      </div>
+    </div>
+  ))}
+</div>
+    {/* Existing table for larger screens */}
+    <table className="min-w-full bg-white shadow-default dark:border-strokedark dark:bg-boxdark hidden sm:table">
+      <thead>
+        <tr>
+          <th className="py-2">Tanggal</th>
+          <th className="py-2">Jam Mulai</th>
+          <th className="py-2">Jam Selesai</th>
+          <th className="py-2">Dosen</th>
+          <th className="py-2">Ruang</th>
+          <th className="py-2">Status</th>
+          <th className="py-2">Aksi</th>
+        </tr>
+      </thead>
+      <tbody>
+        {kelasDetail.jadwals.map((jadwal) => (
+          <tr key={jadwal.id}>
+            <td className="py-2">{jadwal.tanggal}</td>
+            <td className="py-2">{jadwal.jam_mulai}</td>
+            <td className="py-2">{jadwal.jam_selesai}</td>
+            <td className="py-2">{jadwal.dosen}</td>
+            <td className="py-2">{jadwal.ruang}</td>
+            <td className="py-2">{jadwal.status}</td>
+            <td className="py-2">
+              <Link href={`/admin/matakuliah/${kelasDetail.mata_kuliah.id}/kelas/${kelasDetail.id}/jadwal/edit/${jadwal.id}/`} legacyBehavior>
+                <a className="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
+              </Link>
+              <button
+                onClick={() => handleDeleteJadwal(jadwal.id)}
+                className="text-red hover:text-red"
+              >
+                Delete
+              </button>
+              <Link href={`/admin/presensi/${jadwal.id}`} legacyBehavior>
+                <a className="text-green-600 hover:text-green-900 ml-2">Atur Presensi</a>
+              </Link>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
           </div>
         </div>
         <div className="flex justify-end gap-4.5 mt-4">
@@ -182,7 +222,6 @@ const DetailKelas = () => {
           </button>
         </div>
       </div>
-    </div>
   );
 };
 
