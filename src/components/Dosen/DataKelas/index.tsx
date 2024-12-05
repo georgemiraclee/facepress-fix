@@ -101,7 +101,7 @@ const DetailMataKuliah = () => {
   return (
     <div className="mx-auto max-w-270">
       <Breadcrumb pageName="Detail Mata Kuliah dan Kelas" />
-      <div className="mt-4 p-4 bg-white shadow-md rounded-lg">
+      <div className="mt-4 p-4 bg-white shadow-md rounded-lg shadow-default dark:border-strokedark dark:bg-boxdark">
         <h2 className="text-2xl font-bold mb-4">Detail Mata Kuliah</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
@@ -148,7 +148,7 @@ const DetailMataKuliah = () => {
             )}
           </div>
         </div>
-        <div className="mt-8">
+        <div className="mt-8 ">
           <h3 className="text-xl font-bold mb-4">Kelas</h3>
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
@@ -180,7 +180,7 @@ const DetailMataKuliah = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
+              <tbody className="bg-white divide-y divide-gray-200 shadow-default dark:border-strokedark dark:bg-boxdark">
                 {kelas && kelas.length > 0 ? (
                   kelas.map((kelasItem) => (
                     <tr key={kelasItem.id}>
