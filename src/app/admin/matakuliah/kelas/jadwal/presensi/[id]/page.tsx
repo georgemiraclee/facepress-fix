@@ -1,5 +1,5 @@
 import React from "react";
-import DataPresensi from "@/components/Admin/DataPresensi";
+import DataPresensi from "@/components/Admin/DataPresensi/[id]";
 import { Metadata } from "next";
 import DefaultLayout from "@/components/Admin/Layouts/DefaultLayout";
 

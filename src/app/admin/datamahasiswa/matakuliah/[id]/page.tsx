@@ -5,6 +5,7 @@ import Breadcrumb from "@/components/Admin/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Admin/Layouts/DefaultLayout";
 import axiosInstance from "@/utils/axiosinstance";
 import withAuth from "@/hoc/withAuth";
+import Swal from "sweetalert2";
 
 import { Mahasiswa } from "@/types/Mahasiswa";
 import { Course } from "@/types/Course";
@@ -114,6 +115,13 @@ const KelolaDataMataKuliahMahasiswa = () => {
   
       setSelectedCourse(null);
       setSelectedClass(null);
+
+      Swal.fire({
+        icon: "success",
+        title: "Mata Kuliah Succesfully Added",
+        showConfirmButton: false,
+        timer: 2500,
+      });
   
     } catch (error) {
       console.error("Error adding course:", error);
@@ -131,6 +139,13 @@ const KelolaDataMataKuliahMahasiswa = () => {
       setAssignedCourses(prevCourses => {
         const updatedCourses = prevCourses.filter(course => course.id !== courseId);
         return updatedCourses;
+      });
+
+      Swal.fire({
+        icon: "success",
+        title: "Mata Kuliah Succesfully Deleted",
+        showConfirmButton: false,
+        timer: 2500,
       });
   
     } catch (error) {
