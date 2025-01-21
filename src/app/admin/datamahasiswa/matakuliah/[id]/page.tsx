@@ -206,7 +206,7 @@ const KelolaDataMataKuliahMahasiswa = () => {
           className="flex justify-center bg-primary px-6 py-2 text-white rounded hover:bg-opacity-90"
           onClick={handleAddCourse}
         >
-          Tambah Mata Kuliah
+          Tambah
         </button>
 
         <h3 className="mt-4 text-xl font-bold">Daftar Mata Kuliah yang Diambil:</h3>
