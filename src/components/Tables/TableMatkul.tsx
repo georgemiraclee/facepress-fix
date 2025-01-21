@@ -27,7 +27,6 @@ const MataKuliahList = (): JSX.Element => {
             },
           }
         );
-        console.log("Response Data:", response.data);
         if (response.data.status === "success") {
           setData(response.data.data);
         } else {
@@ -53,25 +52,38 @@ const MataKuliahList = (): JSX.Element => {
   }
 
   if (!data.length) {
-    return <p>No data available</p>;
+    return <p>Data tidak tersedia</p>;
   }
 
   return (
-    <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
-      <h4 className="mb-6 text-xl font-semibold text-black dark:text-white">
+    <div className="p-6 bg-white shadow-lg rounded-lg ">
+      <h2 className="text-2xl font-bold mb-6 border-b pb-2">
         Daftar Mata Kuliah Mahasiswa
-      </h4>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {data.map((mk, index) => (
-          <div key={index} className="bg-white rounded-lg shadow-md p-4 border dark:bg-boxdark dark:border-strokedark">
-            <h5 className="text-lg font-bold mb-2">
-              Mata Kuliah: {mk.mata_kuliah_nama}
-            </h5>
-            <p className="text-sm mb-1"><strong>Kelas:</strong> {mk.kelas_nama}</p>
-            <p className="text-sm mb-1"><strong>Semester Mengambil:</strong> {mk.semester_mengambil}</p>
-            <p className={`text-sm ${mk.status === "Belum Lulus" ? "text-red-500" : "text-green-500"}`}>
-              <strong>Status:</strong> {mk.status}
-            </p>
+          <div
+            key={index}
+            className="p-4 bg-white border rounded-lg shadow-md"
+          >
+            <h3 className="text-lg font-bold mb-2 text-gray-800">
+              {mk.mata_kuliah_nama}
+            </h3>
+            <div className="space-y-2">
+              <p className="text-sm">
+                <strong>Kelas:</strong> {mk.kelas_nama}
+              </p>
+              <p className="text-sm">
+                <strong>Semester Mengambil:</strong> {mk.semester_mengambil}
+              </p>
+              <p
+                className={`text-sm font-semibold ${
+                  mk.status === "Belum Lulus" ? "text-red-500" : "text-green-500"
+                }`}
+              >
+                <strong>Status:</strong> {mk.status}
+              </p>
+            </div>
           </div>
         ))}
       </div>
