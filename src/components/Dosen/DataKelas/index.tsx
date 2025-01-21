@@ -230,9 +230,9 @@ const DetailMataKuliah = () => {
           </div>
         </div>
         <div className="mt-4">
-          <Link href="/admin/mata-kuliah">
-            <button className="text-blue-500 hover:text-blue-700">
-              Kembali ke Daftar Mata Kuliah
+          <Link href="/dosen/matakuliah">
+            <button className="bg-red rounded px-3 py-1 hover:bg-red-300 text-white ">
+              Kembali 
             </button>
           </Link>
         </div>
