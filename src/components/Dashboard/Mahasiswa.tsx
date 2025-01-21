@@ -1,13 +1,23 @@
 "use client";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation"; // Import useRouter
+import { useRouter } from "next/navigation";
 import withAuth from "@/hoc/withAuth";
-import TableAdmin from "../Tables/TableOne";
+import TableMatkul from "../Tables/TableMatkul";
 import Link from "next/link";
 
+interface Jadwal {
+  id: number;
+  tanggal: string;
+  jam_mulai: string;
+  jam_selesai: string;
+  dosen: string;
+  ruang: string;
+  status: "belum dimulai" | "sudah selesai" | "sedang berlangsung";
+}
+
 const Mahasiswa: React.FC = () => {
-  const router = useRouter(); // Initialize router here
+  const router = useRouter();
   const [profile, setProfile] = useState({
     id: null,
     nama: "",
@@ -18,6 +28,9 @@ const Mahasiswa: React.FC = () => {
     nik: "",
     isWajahExist: false,
   });
+  const [classData, setClassData] = useState<{ jadwals: Jadwal[] } | null>(
+    null,
+  );
   const [error, setError] = useState<string | null>(null);
   const [greeting, setGreeting] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -36,45 +49,68 @@ const Mahasiswa: React.FC = () => {
   };
 
   const redirectToFaceCapture = () => {
-    router.push("/mahasiswa/faceinput"); // Redirect client-side using router.push
+    router.push("/mahasiswa/faceinput");
+  };
+
+  const formatTime = (time: string) => {
+    return new Date(`2000-01-01T${time}`).toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const formatDate = (date: string) => {
+    return new Date(date).toLocaleDateString("id-ID", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
   };
 
   useEffect(() => {
-    const fetchProfileData = async () => {
+    const fetchData = async () => {
       try {
         const token = localStorage.getItem("token");
-        const response = await axios.get(
+        const headers = {
+          Authorization: `Bearer ${token}`,
+        };
+
+        const profileResponse = await axios.get(
           "http://localhost:8000/api/web-mahasiswa/profil-user/",
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
+          { headers },
         );
 
         setProfile({
-          id: response.data.data.id || null,
-          nama: response.data.data.nama,
-          nim: response.data.data.nim,
-          email: response.data.data.email,
-          semester: response.data.data.semester,
-          mobilePhone: response.data.data.mobile_phone,
-          nik: response.data.data.nik,
-          isWajahExist: response.data.data.is_wajah_exist,
+          id: profileResponse.data.data.id || null,
+          nama: profileResponse.data.data.nama,
+          nim: profileResponse.data.data.nim,
+          email: profileResponse.data.data.email,
+          semester: profileResponse.data.data.semester,
+          mobilePhone: profileResponse.data.data.mobile_phone,
+          nik: profileResponse.data.data.nik,
+          isWajahExist: profileResponse.data.data.is_wajah_exist,
         });
+
+        const classId = 1;
+        const classResponse = await axios.get(
+          `http://localhost:8000/api/web-mahasiswa/kelas/${classId}`,
+          { headers },
+        );
+
+        setClassData(classResponse.data.data);
         setGreeting(getGreeting());
 
-        // Show the modal if isWajahExist is false
-        if (!response.data.data.is_wajah_exist) {
+        if (!profileResponse.data.data.is_wajah_exist) {
           setShowModal(true);
         }
       } catch (error) {
-        console.error("Error fetching profile data:", error);
-        setError("Gagal mengambil data profil");
+        console.error("Error fetching data:", error);
+        setError("Gagal mengambil data");
       }
     };
 
-    fetchProfileData();
+    fetchData();
   }, []);
 
   return (
@@ -131,29 +167,46 @@ const Mahasiswa: React.FC = () => {
       </div>
       <div className="mt-8 grid grid-cols-12 gap-6">
         <div className="col-span-12 xl:col-span-12">
-          <TableAdmin />
+          <TableMatkul />
         </div>
       </div>
-
-      {showModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg text-center">
-            <h2 className="text-xl font-semibold mb-4">Perhatian</h2>
-            <p className="mb-6">
-              Data wajah belum tersedia. Silakan tambahkan data wajah Anda.
-            </p>
-            <button
-              onClick={redirectToFaceCapture} // Use client-side redirect on button click
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg"
-            >
-              Tambahkan Data Wajah
-            </button>
-            <button
-              onClick={() => setShowModal(false)}
-              className="mt-4 bg-gray-300 hover:bg-gray-400 text-gray-700 py-2 px-4 rounded-lg"
-            >
-              Tutup
-            </button>
+      {classData && (
+        <div className="mt-6 rounded-lg bg-white p-6 shadow-lg">
+          <h3 className="mb-6 border-b pb-2 text-2xl font-semibold">
+            Jadwal Pertemuan
+          </h3>
+          <div className="overflow-x-auto">
+            <table className="divide-gray-200 min-w-full divide-y">
+              <thead>
+                <tr>
+                  {["Tanggal", "Waktu", "Dosen", "Ruang", "Status"].map(
+                    (header) => (
+                      <th
+                        key={header}
+                        className="text-gray-500 px-6 py-3 text-left text-xs font-medium uppercase tracking-wider"
+                      >
+                        {header}
+                      </th>
+                    ),
+                  )}
+                </tr>
+              </thead>
+              <tbody>
+                {classData.jadwals.map((jadwal) => (
+                  <tr key={jadwal.id}>
+                    <td className="px-6 py-4">{formatDate(jadwal.tanggal)}</td>
+                    <td className="px-6 py-4">
+                      {`${formatTime(jadwal.jam_mulai)} - ${formatTime(
+                        jadwal.jam_selesai,
+                      )}`}
+                    </td>
+                    <td className="px-6 py-4">{jadwal.dosen}</td>
+                    <td className="px-6 py-4">{jadwal.ruang}</td>
+                    <td className="px-6 py-4">{jadwal.status}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       )}
