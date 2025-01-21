@@ -179,19 +179,19 @@ const DetailKelas = () => {
                   <td className="py-2">{jadwal.status}</td>
                   <td className="py-2">
                     <Link href={`/dosen/matakuliah/kelas/jadwal/edit/${jadwal.id}`} legacyBehavior>
-                      <a className="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
+                      <a className="text-white px-2 py-1 bg-blue-500 rounded mr-2">Edit</a>
                     </Link>
                     <button
                       onClick={() => alert("Delete functionality not implemented yet")}
-                      className="text-red hover:text-red mr-2"
+                      className="bg-red text-white px-2 py-1 rounded mr-2"
                     >
                       Delete
                     </button>
                     <Link href={`/dosen/matakuliah/kelas/jadwal/datapresensi/${jadwal.id}`} legacyBehavior>
-                      <a className="text-green-600 hover:text-green-900 mr-2">Atur Presensi</a>
+                      <a className="bg-green-500 text-white px-2 py-1 rounded mr-2">Atur Presensi</a>
                     </Link>
                     <Link href={`/dosen/matakuliah/kelas/jadwal/presensi/${jadwal.id}/`} legacyBehavior>
-                      <a className="text-yellow-600 hover:text-yellow-900 mr-2">Mulai Kelas</a>
+                      <a className="bg-yellow-300 text-white px-2 py-1 mr-2 rounded">Mulai Kelas</a>
                     </Link>
                   </td>
                 </tr>

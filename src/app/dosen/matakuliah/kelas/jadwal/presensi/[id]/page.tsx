@@ -6,6 +6,7 @@ import Breadcrumb from "@/components/Dosen/Breadcrumbs/Breadcrumb";
 import axiosInstance from "@/utils/axiosinstance";
 import withAuth from "@/hoc/withAuth";
 import { useParams } from "next/navigation"; // Perbarui import
+import Link from "next/link";
 
 // Interface untuk Mahasiswa
 interface Mahasiswa {
@@ -101,6 +102,13 @@ const DataPresensi = (): JSX.Element => {
             ) : (
               <p>Data presensi tidak ditemukan untuk jadwal kelas ini.</p>
             )}
+            <div className="mt-4">
+        <Link href="/dosen/matakuliah/">
+          <button className="bg-red rounded px-3 py-1 hover:bg-red-300 text-white">
+          Kembali
+          </button>
+          </Link>
+        </div>
           </div>
         </div>
       </div>
