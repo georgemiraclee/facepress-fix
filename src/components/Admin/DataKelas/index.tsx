@@ -220,14 +220,14 @@ const DetailMataKuliah = () => {
               <td className="py-2">{kelas.kapasitas}</td>
               <td className="py-2">
                 <Link href={`/admin/matakuliah/${mataKuliah.id}/kelas/edit/${kelas.id}`} legacyBehavior>
-                  <a className="text-yellow-600 hover:text-yellow-900 mr-2">Edit</a>
+                  <a className="bg-yellow-500 text-white hover:bg-yellow-600 px-2 py-1 mr-2 rounded">Edit</a>
                 </Link>
                 <Link href={`/admin/matakuliah/${mataKuliah.id}/kelas/${kelas.id}/jadwal/`} legacyBehavior>
-                  <a className="text-blue-600 hover:text-blue-900 mr-2">Jadwal</a>
+                  <a className=" bg-blue-500 text-white hover:bg-blue-700 px-2 py-1 mr-2 rounded">Jadwal</a>
                 </Link>
                 <button
                   onClick={() => handleDeleteKelas(kelas.id)}
-                  className="text-red hover:text-red"
+                  className="bg-red text-white px-2 py-1 mr-2 rounded"
                 >
                   Delete
                 </button>

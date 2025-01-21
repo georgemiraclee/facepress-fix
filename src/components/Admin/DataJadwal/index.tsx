@@ -194,16 +194,16 @@ const DetailKelas = () => {
             <td className="py-2">{jadwal.status}</td>
             <td className="py-2">
               <Link href={`/admin/matakuliah/${kelasDetail.mata_kuliah.id}/kelas/${kelasDetail.id}/jadwal/edit/${jadwal.id}/`} legacyBehavior>
-                <a className="text-blue-600 hover:text-blue-900 mr-2">Edit</a>
+                <a className="bg-blue-500 text-white hover:bg-blue-700 mr-2 px-2 py-1 rounded">Edit</a>
               </Link>
               <button
                 onClick={() => handleDeleteJadwal(jadwal.id)}
-                className="text-red hover:text-red"
+                className="bg-red text-white px-2 py-1 rounded mr-2"
               >
                 Delete
               </button>
               <Link href={`/admin/presensi/${jadwal.id}`} legacyBehavior>
-                <a className="text-green-600 hover:text-green-900 ml-2">Atur Presensi</a>
+                <a className="bg-green-500 text-white hover:bg-green-700 px-2 py-1 mr-2 rounded">Presensi</a>
               </Link>
             </td>
           </tr>
