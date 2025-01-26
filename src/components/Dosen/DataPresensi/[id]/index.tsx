@@ -97,6 +97,25 @@ const DataPresensi = (): JSX.Element => {
     }
   };
 
+  const handleSetHadirSemua = async () => {
+    try {
+      await Promise.all(
+        jadwalDetail?.presensiMahasiswa.map((mahasiswa) => 
+          axiosInstance.patch(
+            `http://localhost:8000/api/web-dosen/presensi/${mahasiswa.presensiId}/set-status/`,
+            { status: "hadir" }
+          )
+        ) || []
+      );
+      fetchData();
+      Swal.fire("Success", "Semua mahasiswa diset Hadir", "success");
+    } catch (error) {
+      console.error("Error setting all hadir:", error);
+      Swal.fire("Error", "Gagal mengeset semua mahasiswa hadir.", "error");
+    }
+  };
+
+
   const getStatusColor = (status: string | null) => {
     const statusObj = STATUS_OPTIONS.find((opt) => opt.value === status);
     return statusObj ? statusObj.color : "text-gray-500";
@@ -141,12 +160,20 @@ const DataPresensi = (): JSX.Element => {
                   <strong>Lecturer:</strong> {jadwalDetail.dosen}
                 </p>
               </div>
+              <div className="flex space-x-4 mb-4">
+                <button 
+                  onClick={handleSetHadirSemua}
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                  Set Hadir Semua
+                </button>
+              </div>
               <div className="mt-8">
                 <h5 className="mb-4 text-lg font-semibold text-black dark:text-white">
-                  Registered Students
+                Mahasiswa Terdaftar {jadwalDetail.mataKuliah}
                 </h5>
                 {jadwalDetail.presensiMahasiswa.length === 0 ? (
-                  <p>No students are registered for this schedule.</p>
+                  <p>Tidak ada mahasiswa yang terdaftar pada kelas ini.</p>
                 ) : (
                   <div className="overflow-x-auto">
                     <table className="border-gray-300 min-w-full table-auto border-collapse border text-left dark:border-strokedark">
