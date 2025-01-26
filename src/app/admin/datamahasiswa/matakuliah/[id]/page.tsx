@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import Breadcrumb from "@/components/Admin/Breadcrumbs/Breadcrumb";
 import DefaultLayout from "@/components/Admin/Layouts/DefaultLayout";
 import axiosInstance from "@/utils/axiosinstance";
 import withAuth from "@/hoc/withAuth";
+import { BiSearch } from "react-icons/bi";
 import Swal from "sweetalert2";
 
 import { Mahasiswa } from "@/types/Mahasiswa";
@@ -22,6 +23,16 @@ const KelolaDataMataKuliahMahasiswa = () => {
   const [totalSKS, setTotalSKS] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+    // New state for search functionality
+    const [searchTerm, setSearchTerm] = useState<string>('');
+
+    const filteredCourses = useMemo(() => {
+      if (!searchTerm) return courses;
+      return courses.filter(course => 
+        course.nama.toUpperCase().includes(searchTerm.toUpperCase())
+      );
+    }, [courses, searchTerm]);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -54,6 +65,8 @@ const KelolaDataMataKuliahMahasiswa = () => {
 
     fetchData();
   }, [id]);
+
+  
 
   useEffect(() => {
     const fetchClasses = async () => {
@@ -129,6 +142,7 @@ const KelolaDataMataKuliahMahasiswa = () => {
     }
   };
   
+  
   const handleDeleteCourse = async (courseId: number) => {
     try {
       const token = localStorage.getItem("token");
@@ -175,19 +189,36 @@ const KelolaDataMataKuliahMahasiswa = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
-          <select
-            className="p-2 border rounded"
-            value={selectedCourse || ''}
-            onChange={(e) => setSelectedCourse(e.target.value ? parseInt(e.target.value) : null)}
-          >
-            <option value="">Pilih Mata Kuliah</option>
-            {courses && courses.map(course => (
-              <option key={course.id} value={course.id}>
-                {course.nama}
-              </option>
-            ))}
-          </select>
+      
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <BiSearch className="h-5 w-5 text-gray-400" />
+            </div>
+            <input 
+              type="text" 
+              placeholder="Cari Mata Kuliah"
+              className="w-full p-2 pl-10 border rounded"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            {searchTerm && filteredCourses.length > 0 && (
+              <div className="absolute z-10 w-full bg-white border rounded mt-1 max-h-60 overflow-y-auto">
+                {filteredCourses.map(course => (
+                  <div 
+                    key={course.id} 
+                    className={`p-2 hover:bg-gray-100 cursor-pointer ${selectedCourse === course.id ? 'bg-gray-200' : ''}`}
+                    onClick={() => {
+                      setSelectedCourse(course.id);
+                      setSearchTerm(course.nama);
+                    }}
+                  >
+                    {course.nama}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
           <select
             className="p-2 border rounded"
             value={selectedClass || ''}
@@ -215,23 +246,29 @@ const KelolaDataMataKuliahMahasiswa = () => {
             <tr className="bg-gray-100">
               <th className="border px-4 py-2">Nama Mata Kuliah</th>
               <th className="border px-4 py-2">Kelas</th>
+              <th className="border px-4 py-2">SKS</th>
               <th className="border px-4 py-2">Status</th>
               <th className="border px-4 py-2">Aksi</th>
             </tr>
           </thead>
           <tbody>
-            {assignedCourses.filter(course => course).map(course => (
-              <tr key={course.id}>
-                <td className="border px-4 py-2">{course.mata_kuliah_nama ?? "N/A"}</td>
-                <td className="border px-4 py-2">{course.kelas_nama ?? "N/A"}</td>
-                <td className="border px-4 py-2">{course.status ?? "N/A"}</td>
-                <td className="border px-4 py-2">
-                  <button  className="text-red-500" onClick={() => handleDeleteCourse(course.id)}>
-                    Hapus
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {assignedCourses.filter(course => course).map(course => {
+              // Find the full course details to get SKS
+              const fullCourseDetails = courses.find(c => c.id === course.mata_kuliah);
+              return (
+                <tr key={course.id}>
+                  <td className="border px-4 py-2">{course.mata_kuliah_nama ?? "N/A"}</td>
+                  <td className="border px-4 py-2">{course.kelas_nama ?? "N/A"}</td>
+                  <td className="border px-4 py-2">{fullCourseDetails?.sks ?? "N/A"}</td>
+                  <td className="border px-4 py-2">{course.status ?? "N/A"}</td>
+                  <td className="border px-4 py-2">
+                    <button className="text-red-500" onClick={() => handleDeleteCourse(course.id)}>
+                      Hapus
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
 
