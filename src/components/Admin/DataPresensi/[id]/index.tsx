@@ -91,6 +91,25 @@ const DataPresensi = (): JSX.Element => {
     }
   };
 
+  const handleSetHadirSemua = async () => {
+    try{
+      await Promise.all(
+        jadwalDetail?.presensiMahasiswa.map((mahasiswa) =>
+          axiosInstance.patch(
+            `http://localhost:8000/api/web-admin/presensi/${mahasiswa.presensiId}/set-status/`,
+            { status: "hadir", presensiOleh: "admin" },
+          )
+        ) || []
+      );
+      fetchData();
+      Swal.fire("Success", "All students are marked as present", "success");
+    } catch (error) {
+      console.error("Error updating status:", error);
+      Swal.fire("Error", "Failed to update status.", "error");
+      };
+        
+    };
+
   const handleSetStatus = async (presensiId: number, status: string) => {
     try {
       await axiosInstance.patch(
@@ -153,7 +172,14 @@ const DataPresensi = (): JSX.Element => {
                   <strong>Lecturer:</strong> {jadwalDetail.dosen}
                 </p>
               </div>
-
+              <div className="flex space-x-4 mb-4">
+                <button 
+                  onClick={handleSetHadirSemua}
+                  className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                >
+                  Set Hadir Semua
+                </button>
+              </div>
               {/* Registered Students Table */}
               <div className="mt-8">
                 <h5 className="mb-4 text-lg font-semibold text-black dark:text-white">
