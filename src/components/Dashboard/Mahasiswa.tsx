@@ -120,6 +120,44 @@ const Mahasiswa: React.FC = () => {
           {error}
         </div>
       )}
+      
+      {/* Add the modal here, right after error handling */}
+      {showModal && !profile.isWajahExist && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black bg-opacity-50 transition-opacity"
+            onClick={() => setShowModal(false)}
+          />
+          
+          {/* Modal */}
+          <div className="relative bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+            <div className="mb-4">
+              <h3 className="text-xl font-semibold text-gray-900">
+                Pendaftaran Wajah Diperlukan
+              </h3>
+              <p className="mt-2 text-gray-600">
+                Untuk meningkatkan keamanan dan memudahkan proses absensi, Anda perlu mendaftarkan wajah Anda. Silakan lakukan pendaftaran wajah sekarang.
+              </p>
+            </div>
+            
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setShowModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
+              >
+               Sudah Mengisi
+              </button>
+              <button
+                onClick={redirectToFaceCapture}
+                className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              >
+                Daftar Sekarang
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="mb-6">
         <h2 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
           {greeting}
@@ -157,11 +195,16 @@ const Mahasiswa: React.FC = () => {
             </div>
           </div>
           <div className="mt-6">
-            <Link href={`/edit`} legacyBehavior>
-              <a className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-all duration-300 shadow-md">
-                Edit
-              </a>
-            </Link>
+          <Link href={`/edit`} legacyBehavior>
+            <a className="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg transition-all duration-300 shadow-md">
+              Edit
+            </a>
+          </Link>
+          <Link href={`/mahasiswa/faceinput`} legacyBehavior>
+            <a className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg transition-all duration-300 shadow-md ml-2">
+              Wajah Mahasiswa
+            </a>
+          </Link>
           </div>
         </div>
       </div>
